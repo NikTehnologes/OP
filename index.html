@@ -68,7 +68,7 @@
             height: 70px;
             object-fit: cover;
             border-radius: 50%;
-            display: none; /* По умолчанию скрыто */
+            display: none;
         }
 
         .header-text {
@@ -324,9 +324,7 @@
 <body>
     <header>
         <div class="logo-container">
-            <!-- Логотип по умолчанию -->
             <div class="logo" id="text-logo">NT</div>
-            <!-- Место для логотипа изображением -->
             <img src="" alt="NikTehnologes Logo" class="logo-img" id="image-logo">
             <div class="header-text">
                 <h1>NikTehnologes | Портфолио</h1>
@@ -337,7 +335,7 @@
 
     <main>
         <div class="projects-grid" id="projects-container">
-            <!-- Проекты загружаются автоматически -->
+            <p class="empty-message">Пока нет проектов. Добавьте первый проект через панель администратора.</p>
         </div>
 
         <div class="admin-section">
@@ -345,7 +343,7 @@
             
             <div class="password-form">
                 <input type="password" id="password-input" placeholder="Введите пароль администратора">
-                <button type="button" class="password-btn" onclick="checkPassword()">Разблокировать</button>
+                <button type="button" class="password-btn" id="password-btn">Разблокировать</button>
             </div>
             <div id="password-error" class="error">Неверный пароль! Попробуйте снова.</div>
             
@@ -376,14 +374,9 @@
     </footer>
 
     <script>
-        // ================================================================
-        // НАСТРОЙКИ САЙТА
-        // ================================================================
+        // Конфигурация
         const CONFIG = {
-            // Пароль администратора (по умолчанию: nt2023)
             ADMIN_PASSWORD: "nt2023",
-            
-            // Автоматически попытаться загрузить логотип из этих путей
             LOGO_PATHS: [
                 "logo.png",
                 "logo.jpg",
@@ -391,38 +384,43 @@
                 "images/logo.png"
             ]
         };
-        
-        // ================================================================
-        // ИНИЦИАЛИЗАЦИЯ САЙТА
-        // ================================================================
-        document.addEventListener('DOMContentLoaded', () => {
-            // Пытаемся загрузить логотип
+
+        // Состояние приложения
+        let isAdmin = false;
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', initApp);
+
+        function initApp() {
             loadLogo();
-            
-            // Загружаем проекты
             loadProjects();
-        });
-        
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('password-btn').addEventListener('click', checkPassword);
+            document.getElementById('project-form').addEventListener('submit', handleProjectSubmit);
+        }
+
         // Загрузка логотипа
         function loadLogo() {
-            for (const path of CONFIG.LOGO_PATHS) {
+            let logoFound = false;
+            
+            CONFIG.LOGO_PATHS.forEach(path => {
                 const img = new Image();
-                img.src = path;
                 img.onload = function() {
-                    document.getElementById('text-logo').style.display = 'none';
-                    const logoImg = document.getElementById('image-logo');
-                    logoImg.src = path;
-                    logoImg.style.display = 'block';
-                    break;
+                    if (!logoFound) {
+                        document.getElementById('text-logo').style.display = 'none';
+                        const logoImg = document.getElementById('image-logo');
+                        logoImg.src = path;
+                        logoImg.style.display = 'block';
+                        logoFound = true;
+                    }
                 };
-            }
+                img.src = path;
+            });
         }
-        
-        // ================================================================
-        // СИСТЕМА ПРОЕКТОВ
-        // ================================================================
-        let isAdmin = false;
-        
+
         // Проверка пароля
         function checkPassword() {
             const input = document.getElementById('password-input');
@@ -447,10 +445,9 @@
         }
         
         // Обработка формы проекта
-        document.getElementById('project-form').addEventListener('submit', function(e) {
+        function handleProjectSubmit(e) {
             e.preventDefault();
             
-            // Получаем данные из формы
             const project = {
                 id: Date.now(),
                 name: document.getElementById('project-name').value,
@@ -459,30 +456,26 @@
                 date: new Date().toLocaleDateString('ru-RU')
             };
             
-            // Сохраняем и отображаем проект
             saveProject(project);
             addProjectToPage(project);
-            
-            // Очищаем форму
             this.reset();
             
-            alert('Проект "' + project.name + '" успешно добавлен!');
-        });
+            alert(`Проект "${project.name}" успешно добавлен!`);
+        }
 
         // Сохранение проекта
         function saveProject(project) {
-            let projects = JSON.parse(localStorage.getItem('projects'));
-            if (!projects) projects = [];
+            let projects = JSON.parse(localStorage.getItem('projects') || '[]');
             projects.push(project);
             localStorage.setItem('projects', JSON.stringify(projects));
         }
 
         // Загрузка проектов
         function loadProjects() {
-            let projects = JSON.parse(localStorage.getItem('projects'));
+            const projects = JSON.parse(localStorage.getItem('projects') || '[]');
             const container = document.getElementById('projects-container');
             
-            if (!projects || projects.length === 0) {
+            if (projects.length === 0) {
                 container.innerHTML = '<p class="empty-message">Пока нет проектов. Добавьте первый проект через панель администратора.</p>';
             } else {
                 container.innerHTML = '';
@@ -494,7 +487,7 @@
         function addProjectToPage(project) {
             const container = document.getElementById('projects-container');
             
-            // Убираем сообщение "нет проектов"
+            // Убираем сообщение если это первый проект
             if (container.querySelector('.empty-message')) {
                 container.innerHTML = '';
             }
@@ -533,7 +526,7 @@
             
             if (!confirm('Вы уверены, что хотите удалить проект?')) return;
             
-            let projects = JSON.parse(localStorage.getItem('projects'));
+            let projects = JSON.parse(localStorage.getItem('projects') || '[]');
             projects = projects.filter(p => p.id !== id);
             localStorage.setItem('projects', JSON.stringify(projects));
             

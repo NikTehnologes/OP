@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NikTehnologes | Портфолио проектов</title>
+    <style>
+        /* Основные переменные цветов */
+        :root {
+            --primary: #3498db;   /* Основной синий */
+            --accent: #1abc9c;    /* Акцентный бирюзовый */
+            --dark: #2c3e50;      /* Тёмный фон/текст */
+            --light: #f8f9fa;     /* Светлый фон */
+            --danger: #e74c3c;    /* Цвет для удаления */
+        }
+
+        /* Сброс стилей и базовые настройки */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Шапка сайта */
+        header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--accent);
+            flex-wrap: wrap;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 28px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .header-text {
+            flex-grow: 1;
+        }
+
+        h1 {
+            color: var(--dark);
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        /* Сетка проектов */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .project-card {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-card:hover {
+            transform: translateY(-7px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+
+        .project-title {
+            font-size: 1.35rem;
+            color: var(--dark);
+            margin-bottom: 12px;
+        }
+
+        .project-description {
+            margin-bottom: 20px;
+            color: #555;
+            flex-grow: 1;
+        }
+
+        .project-meta {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 15px;
+            font-style: italic;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .project-link {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+            gap: 5px;
+        }
+
+        .project-link:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+        }
+
+        .project-link.download {
+            background: var(--accent);
+        }
+
+        .project-link.download:hover {
+            background: #16a085;
+        }
+
+        .project-link.delete {
+            background: var(--danger);
+            display: none; /* Скрыто по умолчанию */
+        }
+
+        /* Секция администратора */
+        .admin-section {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin: 40px auto;
+            max-width: 600px;
+        }
+
+        .admin-section h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--dark);
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .password-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        #password-input {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            min-width: 200px;
+            font-size: 1rem;
+        }
+
+        .password-btn {
+            padding: 12px 20px;
+            background: var(--dark);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-weight: 600;
+        }
+
+        .password-btn:hover {
+            background: #1e2a38;
+        }
+
+        .add-project-form {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 188, 156, 0.2);
+        }
+
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .upload-btn {
+            padding: 13px 30px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            font-size: 1rem;
+            margin-top: 10px;
+        }
+
+        .upload-btn:hover {
+            background: #16a085;
+            transform: translateY(-2px);
+        }
+
+        /* Подвал сайта */
+        footer {
+            text-align: center;
+            padding: 25px 0;
+            margin-top: auto;
+            color: #777;
+            border-top: 1px solid #eee;
+        }
+
+        /* Сообщения об ошибках */
+        .error {
+            color: var(--danger);
+            margin-top: 8px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+            
+            header {
+                flex-direction: column;
+                text-align: center;
+                align-items: center;
+            }
+            
+            .logo-container {
+                justify-content: center;
+            }
+            
+            .password-form {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-links {
+                flex-direction: column;
+            }
+            
+            .project-link {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <!-- Логотип компании -->
+            <div class="logo">NT</div>
+            <div class="header-text">
+                <h1>NikTehnologes | Портфолио</h1>
+                <p>Скачивайте IT-проекты и исходные коды</p>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Контейнер для проектов -->
+        <div class="projects-grid" id="projects-container">
+            <!-- Проекты будут загружаться сюда автоматически -->
+        </div>
+
+        <!-- Административная секция -->
+        <div class="admin-section">
+            <h2>Панель управления проектами</h2>
+            
+            <div class="password-form">
+                <input type="password" id="password-input" placeholder="Введите пароль администратора">
+                <button type="button" class="password-btn" onclick="checkPassword()">Разблокировать</button>
+            </div>
+            <div id="password-error" class="error">Неверный пароль! Попробуйте снова.</div>
+            
+            <form class="add-project-form" id="project-form">
+                <div class="form-group">
+                    <label for="project-name">Название проекта</label>
+                    <input type="text" id="project-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="project-desc">Описание проекта</label>
+                    <textarea id="project-desc" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="download-link">Ссылка для скачивания (ZIP)</label>
+                    <input type="url" id="download-link" placeholder="https://example.com/project.zip" required>
+                </div>
+                
+                <button type="submit" class="upload-btn">Добавить проект</button>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2023 NikTehnologes | Все проекты доступны для скачивания</p>
+        <p>Сайт размещен на GitHub Pages</p>
+    </footer>
+
+    <script>
+        // ===================================================================
+        // КОНФИГУРАЦИЯ САЙТА
+        // ===================================================================
+        
+        // 1. Настройка пароля администратора (зашифрован в base64)
+        // Для изменения пароля:
+        //   - Замените 'nt2023' на свой пароль
+        //   - В консоли браузера выполните: btoa('ваш_пароль')
+        //   - Замените значение ниже полученным результатом
+        const ENCRYPTED_PASSWORD = "bnQyMDIz"; // nt2023
+        
+        // 2. Настройка логотипа
+        // Чтобы добавить свой логотип:
+        //   - Замените <div class="logo">NT</div> на:
+        //     <img src="logo.png" class="logo" alt="NikTehnologes">
+        //   - Загрузите файл logo.png в ту же папку
+        
+        // ===================================================================
+        // СИСТЕМА УПРАВЛЕНИЯ ПРОЕКТАМИ
+        // ===================================================================
+        
+        // Состояние администратора
+        let isAdmin = false;
+        
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProjects();
+        });
+
+        // Проверка пароля администратора
+        function checkPassword() {
+            const input = document.getElementById('password-input');
+            const error = document.getElementById('password-error');
+            const form = document.querySelector('.add-project-form');
+            
+            // Расшифровка и сравнение пароля
+            if (btoa(input.value) === ENCRYPTED_PASSWORD) {
+                isAdmin = true;
+                form.style.display = 'flex';
+                error.style.display = 'none';
+                input.value = '';
+                
+                // Показываем кнопки удаления
+                document.querySelectorAll('.project-link.delete').forEach(btn => {
+                    btn.style.display = 'inline-flex';
+                });
+                
+                alert('Режим администратора активирован!');
+            } else {
+                error.style.display = 'block';
+            }
+        }
+        
+        // Обработка добавления проекта
+        document.getElementById('project-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const project = {
+                id: Date.now(), // Уникальный ID
+                name: document.getElementById('project-name').value,
+                description: document.getElementById('project-desc').value,
+                download: document.getElementById('download-link').value,
+                date: new Date().toLocaleDateString('ru-RU')
+            };
+            
+            // Сохраняем проект
+            saveProject(project);
+            
+            // Добавляем на страницу
+            addProjectToPage(project);
+            
+            // Очищаем форму
+            this.reset();
+            
+            alert('Проект "' + project.name + '" успешно добавлен!');
+        });
+
+        // Сохранение проекта в localStorage
+        function saveProject(project) {
+            const projects = JSON.parse(localStorage.getItem('projects') || []);
+            projects.push(project);
+            localStorage.setItem('projects', JSON.stringify(projects));
+        }
+
+        // Загрузка проектов из localStorage
+        function loadProjects() {
+            const projects = JSON.parse(localStorage.getItem('projects') || []);
+            const container = document.getElementById('projects-container');
+            
+            if (projects.length === 0) {
+                container.innerHTML = '<p class="empty-message">Пока нет проектов. Добавьте первый проект через панель администратора.</p>';
+            } else {
+                container.innerHTML = '';
+                projects.forEach(p => addProjectToPage(p));
+            }
+        }
+
+        // Добавление проекта на страницу
+        function addProjectToPage(project) {
+            const container = document.getElementById('projects-container');
+            
+            const projectCard = document.createElement('div');
+            projectCard.className = 'project-card';
+            projectCard.dataset.id = project.id;
+            projectCard.innerHTML = `
+                <h3 class="project-title">${project.name}</h3>
+                <p class="project-description">${project.description}</p>
+                <p class="project-meta">Добавлено: ${project.date}</p>
+                <div class="project-links">
+                    <a href="${project.download}" class="project-link download" download>
+                        <i class="fas fa-download"></i> Скачать ZIP
+                    </a>
+                    <a href="#" class="project-link delete" onclick="deleteProject(${project.id})">
+                        <i class="fas fa-trash"></i> Удалить
+                    </a>
+                </div>
+            `;
+            
+            // Скрываем кнопку удаления, если не админ
+            if (!isAdmin) {
+                projectCard.querySelector('.delete').style.display = 'none';
+            }
+            
+            container.appendChild(projectCard);
+        }
+
+        // Удаление проекта
+        function deleteProject(id) {
+            if (!isAdmin) {
+                alert('Требуются права администратора!');
+                return;
+            }
+            
+            if (!confirm('Вы уверены, что хотите удалить проект?')) return;
+            
+            const projects = JSON.parse(localStorage.getItem('projects') || []);
+            const updatedProjects = projects.filter(p => p.id !== id);
+            localStorage.setItem('projects', JSON.stringify(updatedProjects));
+            
+            // Удаляем со страницы
+            document.querySelector(`.project-card[data-id="${id}"]`).remove();
+            
+            // Обновляем список проектов
+            loadProjects();
+        }
+    </script>
+    
+    <!-- Font Awesome для иконок -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>
